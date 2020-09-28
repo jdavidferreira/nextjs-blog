@@ -1,5 +1,5 @@
 import Link from "next/link"
-import Date from "./date"
+import Date from "components/Date"
 import styles from "./JobCard.module.css"
 
 export default function JobCard({
