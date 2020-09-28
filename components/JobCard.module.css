@@ -1,0 +1,25 @@
+.container {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 8px;
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  padding: 16px;
+}
+
+.companyLogo {
+  align-self: center;
+}
+
+.link {
+  text-decoration: none;
+}
+
+.link,
+.link:hover,
+.link:active,
+.link:link,
+.link:visited {
+  color: black;
+}

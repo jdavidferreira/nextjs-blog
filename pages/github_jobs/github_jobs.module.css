@@ -1,0 +1,9 @@
+.jobsContainer {
+  display: grid;
+  gap: 16px;
+}
+
+.jobDescription {
+  background-color: hsla(0, 0%, 96%, 1);
+  padding: 8px;
+}
