@@ -1,13 +1,24 @@
 import Head from 'next/head'
+import getConfig from 'next/config'
+import useSWR from 'swr'
+
 import Date from 'components/Date'
 import Job from 'components/JobCard/JobCard'
 import Layout from 'components/Layout/Layout'
 import utilStyles from 'styles/utils.module.css'
 import styles from './index.module.css'
-import { isObjectEmpty } from 'utils/general'
 
-// Server-side rendered page
-export default function GithubJobList({ data }) {
+const { publicRuntimeConfig } = getConfig()
+
+// Client-side rendered page
+export default function CsrGithubJobList() {
+  const {
+    data,
+    error,
+  } = useSWR(`${publicRuntimeConfig.githubJobsApiUrl}positions`, (resource) =>
+    fetch(resource).then((res) => res.json())
+  )
+
   return (
     <Layout>
       <Head>
@@ -23,32 +34,15 @@ export default function GithubJobList({ data }) {
           its content at request time.
         </p>
         <div className={styles.jobsContainer}>
-          {data.map((job) => {
-            return <Job key={job.id} {...job} />
-          })}
+          {error ? (
+            <div>Failed to load.</div>
+          ) : !data ? (
+            <div>Loading...</div>
+          ) : (
+            data.map((job) => <Job key={job.id} {...job} />)
+          )}
         </div>
       </article>
     </Layout>
   )
-}
-
-export async function getServerSideProps({ query }) {
-  // Fetch data from external API
-  const url = new URL(process.env.GITHUB_JOBS_API_URL)
-
-  url.pathname = '/positions.json'
-
-  if (!isObjectEmpty(query)) {
-    for (const key in query) {
-      const value = query[key]
-
-      if (value != null && value !== '') url.searchParams.append(key, value)
-    }
-  }
-
-  const res = await fetch(url)
-  const data = await res.json()
-
-  // Pass data to the page via props
-  return { props: { data } }
 }
